@@ -75,7 +75,7 @@
     }
   },
   "release": {
-    "projects": ["external"],
+    "projects": ["external", "external-v2"],
     "projectsRelationship": "independent",
     "version": {
       "conventionalCommits": true,

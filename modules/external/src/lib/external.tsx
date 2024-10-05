@@ -8,6 +8,7 @@ export function External() {
   return (
     <StyledExternal>
       <h1>Welcome to External!</h1>
+      <p>Awesome update</p>
     </StyledExternal>
   );
 }
