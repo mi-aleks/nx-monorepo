@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "release-dry": "nx release --dry-run --verbose"
+    "release-dry": "nx release --dry-run"
   },
   "private": true,
   "dependencies": {

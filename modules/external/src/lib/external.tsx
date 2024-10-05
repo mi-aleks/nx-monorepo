@@ -9,7 +9,7 @@ export function External() {
     <StyledExternal>
       <h1>Welcome to External!</h1>
       <p>Awesome update</p>
-      <p>update more</p>
+      <p>update more...</p>
     </StyledExternal>
   );
 }
