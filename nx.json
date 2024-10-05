@@ -52,16 +52,6 @@
       }
     }
   ],
-  "targetDefaults": {
-    "nx-release-publish": {
-      "options": {
-        "packageRoot": "dist/packages/{projectName}"
-      }
-    },
-    "e2e-ci--**/*": {
-      "dependsOn": ["^build"]
-    }
-  },
   "generators": {
     "@nx/react": {
       "application": {
@@ -86,8 +76,6 @@
       "preVersionCommand": "npx nx run-many -t build",
       "conventionalCommits": true,
       "generatorOptions": {
-        "packageRoot": "dist/packages/{projectName}",
-        "currentVersionResolver": "git-tag",
         "fallbackCurrentVersionResolver": "disk"
       }
     },
@@ -96,6 +84,16 @@
         "file": false,
         "createRelease": "github"
       }
+    }
+  },
+  "targetDefaults": {
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/modules/{projectName}"
+      }
+    },
+    "e2e-ci--**/*": {
+      "dependsOn": ["^build"]
     }
   }
 }
