@@ -1,6 +1,6 @@
 {
-  "name": "@ax/external",
-  "version": "0.0.2",
+  "name": "@ax/external-v2",
+  "version": "0.0.1",
   "main": "./index.js",
   "types": "./index.d.ts",
   "exports": {

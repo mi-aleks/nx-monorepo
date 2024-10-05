@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ax/external": ["modules/external/src/index.ts"]
+      "@ax/external": ["modules/external/src/index.ts"],
+      "@ax/external-v2": ["modules/external-v2/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
