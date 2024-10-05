@@ -2,7 +2,9 @@
   "name": "@nx-monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "release-dry": "nx release --dry-run --verbose"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "11.11.1",
