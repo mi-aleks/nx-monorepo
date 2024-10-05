@@ -73,5 +73,11 @@
         "linter": "eslint"
       }
     }
+  },
+  "release": {
+    "projects": ["external"],
+    "version": {
+      "conventionalCommits": true
+    }
   }
 }
