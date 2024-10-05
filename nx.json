@@ -53,6 +53,11 @@
     }
   ],
   "targetDefaults": {
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/packages/{projectName}"
+      }
+    },
     "e2e-ci--**/*": {
       "dependsOn": ["^build"]
     }
@@ -81,6 +86,8 @@
       "preVersionCommand": "npx nx run-many -t build",
       "conventionalCommits": true,
       "generatorOptions": {
+        "packageRoot": "dist/packages/{projectName}",
+        "currentVersionResolver": "git-tag",
         "fallbackCurrentVersionResolver": "disk"
       }
     },
