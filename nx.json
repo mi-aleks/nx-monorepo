@@ -75,9 +75,10 @@
     }
   },
   "release": {
-    "projects": ["external", "external-v2"],
+    "projects": ["external"],
     "projectsRelationship": "independent",
     "version": {
+      "preVersionCommand": "npx nx run-many -t build",
       "conventionalCommits": true,
       "generatorOptions": {
         "fallbackCurrentVersionResolver": "disk"

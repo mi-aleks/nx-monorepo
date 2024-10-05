@@ -31,19 +31,21 @@ import { default as yargs } from 'yargs';
     gitCommit: false
   });
 
-  await releaseChangelog({
-    gitCommit: false,
-    versionData: projectsVersionData,
-    version: workspaceVersion,
-    dryRun: options.dryRun,
-    verbose: options.verbose,
-    firstRelease: true
-  });
+  if (process.env.CI || options.dryRun) { // don't release changelog
+    await releaseChangelog({
+      gitCommit: false,
+      versionData: projectsVersionData,
+      version: workspaceVersion,
+      dryRun: options.dryRun,
+      verbose: options.verbose
+    });
+  }
 
   // The returned number value from releasePublish will be zero if all projects are published successfully, non-zero if not
   const publishStatus = await releasePublish({
     dryRun: options.dryRun,
     verbose: options.verbose,
   });
+
   process.exit(publishStatus);
 })();
