@@ -15,7 +15,6 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.PAT }}
       NODE_AUTH_TOKEN: ${{ secrets.PAT }}
-      NPM_CONFIG_PROVENANCE: true
     steps:
       - name: Checkout the main branch
         uses: actions/checkout@v4
@@ -49,7 +48,6 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.PAT }}
       NODE_AUTH_TOKEN: ${{ secrets.PAT }}
-      NPM_CONFIG_PROVENANCE: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
