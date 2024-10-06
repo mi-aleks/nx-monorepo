@@ -26,11 +26,16 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+      - name: 📥 Install deps
+        uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
 
       - name: Verify Nx Installation
         run: npx nx --version
 
-      - name: Run nx release
+      - name: 🚀 Release
+        permissions:
+          contents: write
+          id-token: write
         run: npx nx release --skip-publish
