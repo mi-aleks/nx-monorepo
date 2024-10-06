@@ -1,5 +1,5 @@
 {
-  "name": "@ax/external",
+  "name": "external",
   "version": "0.0.6",
   "main": "./index.js",
   "types": "./index.d.ts",
