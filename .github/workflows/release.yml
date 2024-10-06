@@ -34,8 +34,5 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install packages
-        uses: nrwl/nx-set-shas@v4
-
       - name: Run nx release
         run: npm run release
