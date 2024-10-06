@@ -9,7 +9,7 @@ export function External() {
     <StyledExternal>
       <h1>Welcome to External!</h1>
       <h2>UPDATE</h2>
-      {/* test versioning */}
+      {/* test pipeline */}
     </StyledExternal>
   );
 }
