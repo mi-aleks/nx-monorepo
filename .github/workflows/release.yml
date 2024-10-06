@@ -1,13 +1,10 @@
-# Name of your workflow
-name: Release
+name: Release and Publish
 
-# Rules that trigger the workflow
 on:
   # Trigger the workflow on push to the main branch
   push:
     branches:
       - main
-  # Trigger the workflow when a release is created
   release:
     types:
       - created
@@ -19,7 +16,6 @@ env:
 
 jobs:
   setup:
-    # This job will run before both release and publish jobs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the main branch
@@ -33,33 +29,23 @@ jobs:
         with:
           node-version: 20
 
-      # Cache node_modules to prevent redundant installs
-      - name: Cache node modules
+      # Cache the node_modules folder and other important build files
+      - name: Cache workspace
         uses: actions/cache@v3
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
+          path: |
+            node_modules
+            dist  # Add more paths as needed
+          key: ${{ runner.os }}-workspace-${{ hashFiles('package-lock.json') }}
 
       - name: 📥 Install deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
-      # Upload the workspace (including node_modules) for later jobs
-      - name: Upload workspace
-        uses: actions/upload-artifact@v3
-        with:
-          name: workspace
-          path: |
-            ./
-            node_modules
+      - name: Build project
+        run: npm run build
 
   release:
-    needs: setup  # Ensure that the release job waits for the setup job
-    if: github.event_name == 'push'
+    needs: setup  # Depends on the setup job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -67,11 +53,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Download the workspace from the setup job
-      - name: Download workspace
-        uses: actions/download-artifact@v3
+      # Restore cache from the setup job (node_modules and build files)
+      - name: Restore workspace cache
+        uses: actions/cache@v3
         with:
-          name: workspace
+          path: |
+            node_modules
+            dist
+          key: ${{ runner.os }}-workspace-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-workspace-
 
       - name: Verify Nx Installation
         run: npx nx --version
@@ -80,8 +71,7 @@ jobs:
         run: npx nx release --skip-publish
 
   publish:
-    needs: setup  # Ensure that the publish job waits for the setup job
-    if: github.event_name == 'release'
+    needs: setup  # Depends on the setup job
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -93,15 +83,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Download the workspace from the setup job
-      - name: Download workspace
-        uses: actions/download-artifact@v3
+      # Restore cache from the setup job (node_modules and build files)
+      - name: Restore workspace cache
+        uses: actions/cache@v3
         with:
-          name: workspace
+          path: |
+            node_modules
+            dist
+          key: ${{ runner.os }}-workspace-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-workspace-
 
       - name: Print Environment Info
         run: npx nx report
-        shell: bash
 
-      - name: Publish packages
+      - name: 🚀 Publish
         run: npx nx release publish
