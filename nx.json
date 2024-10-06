@@ -72,6 +72,9 @@
   "release": {
     "projectsRelationship": "independent",
     "projects": ["external"],
+    "git": {
+      "commit": false
+    },
     "version": {
       "preVersionCommand": "npx nx run-many -t build",
       "conventionalCommits": true,
