@@ -71,7 +71,7 @@
   },
   "release": {
     "projectsRelationship": "independent",
-    "projects": ["external"],
+    "projects": ["@mi-aleks/external"],
     "git": {
         "commit": false,
         "stageChanges": false,
