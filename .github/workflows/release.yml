@@ -45,6 +45,9 @@ jobs:
   release:
     needs: setup  # Ensure that the release job waits for the setup job
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # needed for provenance data generation
     env:
       GITHUB_TOKEN: ${{ secrets.PAT }}
       NODE_AUTH_TOKEN: ${{ secrets.PAT }}
