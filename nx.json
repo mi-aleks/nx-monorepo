@@ -72,12 +72,12 @@
   "release": {
     "projectsRelationship": "independent",
     "projects": ["external"],
-    "version": {
-      "git": {
+    "git": {
         "commit": false,
         "stageChanges": false,
         "tag": false
       },
+    "version": {
       "preVersionCommand": "npx nx run-many -t build",
       "conventionalCommits": true,
       "generatorOptions": {
