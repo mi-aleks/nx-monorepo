@@ -50,10 +50,20 @@ jobs:
 
   release:
     needs: setup  # Ensure that the release job waits for the setup job
-    # This job will run on push to the main branch
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Download the workspace from the setup job
+      - name: Download workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
+
       - name: Verify Nx Installation
         run: npx nx --version
 
@@ -69,6 +79,17 @@ jobs:
       id-token: write # needed for provenance data generation
     timeout-minutes: 10
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Download the workspace from the setup job
+      - name: Download workspace
+        uses: actions/download-artifact@v3
+        with:
+          name: workspace
+
       - name: Print Environment Info
         run: npx nx report
         shell: bash
