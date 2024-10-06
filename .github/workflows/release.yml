@@ -5,9 +5,6 @@ on:
   push:
     branches:
       - main
-  release:
-    types:
-      - created
 
 env:
   GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -24,31 +21,29 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PAT }}
 
-      - name: Setup node
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # Cache the node_modules folder and other important build files
-      - name: Cache workspace
+      # Cache node_modules to prevent redundant installs
+      - name: Cache node modules
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
-            dist  # Add more paths as needed
-          key: ${{ runner.os }}-workspace-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
 
-      - name: 📥 Install deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
-          install-command: npm install --legacy-peer-deps
+      - name: 📥 Install dependencies
+        run: npm install --legacy-peer-deps
 
       - name: Build project
-        run: npx nx affected -t build
+        run: npm run build
 
   release:
-    needs: setup  # Depends on the setup job
+    needs: setup  # Ensure that the release job waits for the setup job
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -56,16 +51,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Restore cache from the setup job (node_modules and build files)
-      - name: Restore workspace cache
+      # Restore cache from the setup job (node_modules and Nx dependencies)
+      - name: Restore node modules cache
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
-            dist
-          key: ${{ runner.os }}-workspace-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-workspace-
+            ${{ runner.os }}-node-modules-
 
       - name: Verify Nx Installation
         run: npx nx --version
@@ -74,11 +67,12 @@ jobs:
         run: npx nx release --skip-publish
 
   publish:
-    needs: setup  # Depends on the setup job
+    needs: [setup, release]  # Ensure that the publish job waits for both setup and release jobs
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # needed for provenance data generation
+      id-token: write  # needed for provenance data generation
     timeout-minutes: 10
     steps:
       - name: Checkout repository
@@ -86,19 +80,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Restore cache from the setup job (node_modules and build files)
-      - name: Restore workspace cache
+      # Restore cache from the setup job (node_modules and Nx dependencies)
+      - name: Restore node modules cache
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
-            dist
-          key: ${{ runner.os }}-workspace-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-workspace-
+            ${{ runner.os }}-node-modules-
 
       - name: Print Environment Info
         run: npx nx report
 
-      - name: 🚀 Publish
+      - name: Publish packages
         run: npx nx release publish
