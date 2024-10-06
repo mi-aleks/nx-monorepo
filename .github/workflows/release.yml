@@ -38,8 +38,8 @@ jobs:
       - name: 📥 Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build project
-        run: npm run build
+      - name: Build affected modules
+        run: npx nx affected -t build
 
   release:
     needs: setup  # Ensure that the release job waits for the setup job
