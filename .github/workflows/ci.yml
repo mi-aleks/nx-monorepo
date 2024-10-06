@@ -30,7 +30,8 @@ jobs:
       - name: Verify Nx Installation
         run: npx nx --version
 
-      - uses: nrwl/nx-set-shas@v4
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
 
       - name: Run lint, test and build on affected modules
         run: npx nx affected -t lint test
