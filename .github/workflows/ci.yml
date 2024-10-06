@@ -24,8 +24,10 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install Packages
-        run: npm ci --legacy-peer-deps
+      - name: 📥 Install deps
+        uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
 
       - name: Verify Nx Installation
         run: npx nx --version
