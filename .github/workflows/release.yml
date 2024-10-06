@@ -3,15 +3,23 @@ name: Release
 
 # Rules that trigger the workflow
 on:
+  # Trigger the workflow on push to the main branch
   push:
     branches:
       - main
+  # Trigger the workflow when a release is created
+  release:
+    types:
+      - created
 
 env:
   GITHUB_TOKEN: ${{ secrets.PAT }}
+  NODE_AUTH_TOKEN: ${{ secrets.PAT }}
+  NPM_CONFIG_PROVENANCE: true
 
 jobs:
-  main:
+  setup:
+    # This job will run before both release and publish jobs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the main branch
@@ -24,7 +32,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'npm'
+
+      # Cache node_modules to prevent redundant installs
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
 
       - name: 📥 Install deps
         uses: bahmutov/npm-install@v1
@@ -32,8 +48,30 @@ jobs:
           useLockFile: false
           install-command: npm install --legacy-peer-deps
 
+  release:
+    needs: setup  # Ensure that the release job waits for the setup job
+    # This job will run on push to the main branch
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
       - name: Verify Nx Installation
         run: npx nx --version
 
       - name: 🚀 Release
         run: npx nx release --skip-publish
+
+  publish:
+    needs: setup  # Ensure that the publish job waits for the setup job
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # needed for provenance data generation
+    timeout-minutes: 10
+    steps:
+      - name: Print Environment Info
+        run: npx nx report
+        shell: bash
+
+      - name: Publish packages
+        run: npx nx release publish
