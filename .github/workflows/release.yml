@@ -81,4 +81,4 @@ jobs:
         run: npx nx release --skip-publish
 
       - name: 🚀 Publish packages
-        run: npx nx release publish
+        run: npx nx release publish --access=public
