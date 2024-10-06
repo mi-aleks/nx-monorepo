@@ -35,7 +35,4 @@ jobs:
         run: npx nx --version
 
       - name: 🚀 Release
-        permissions:
-          contents: write
-          id-token: write
         run: npx nx release --skip-publish
