@@ -40,8 +40,7 @@ jobs:
       - name: 📥 Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build affected modules
-        run: npx nx affected -t build
+
 
   release:
     needs: setup  # Ensure that the release job waits for the setup job
@@ -69,38 +68,14 @@ jobs:
       - name: Verify Nx Installation
         run: npx nx --version
 
-      - name: 🚀 Release
-        run: npx nx release --skip-publish
-
-  publish:
-    needs: [setup, release]  # Ensure that the publish job waits for both setup and release jobs
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.PAT }}
-      NODE_AUTH_TOKEN: ${{ secrets.PAT }}
-      NPM_CONFIG_PROVENANCE: true
-    permissions:
-      contents: read
-      id-token: write  # needed for provenance data generation
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.PAT }}
-
-      # Restore cache from the setup job (node_modules and Nx dependencies)
-      - name: Restore node modules cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
+      - name: Build affected modules
+        run: npx nx affected -t build
 
       - name: Print Environment Info
         run: npx nx report
 
-      - name: Publish packages
+      - name: 🚀 Release
+        run: npx nx release --skip-publish
+
+      - name: 🚀 Publish packages
         run: npx nx release publish
