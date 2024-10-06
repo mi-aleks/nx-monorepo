@@ -36,7 +36,6 @@ jobs:
 
       - name: Install packages
         uses: nrwl/nx-set-shas@v4
-        run: npm ci --legacy-peer-deps
 
       - name: Run nx release
         run: npm run release
