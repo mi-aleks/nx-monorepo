@@ -6,14 +6,13 @@ on:
     branches:
       - main
 
-env:
-  GITHUB_TOKEN: ${{ secrets.PAT }}
-  NODE_AUTH_TOKEN: ${{ secrets.PAT }}
-  NPM_CONFIG_PROVENANCE: true
-
 jobs:
   setup:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.PAT }}
+      NODE_AUTH_TOKEN: ${{ secrets.PAT }}
+      NPM_CONFIG_PROVENANCE: true
     steps:
       - name: Checkout the main branch
         uses: actions/checkout@v4
@@ -43,8 +42,11 @@ jobs:
 
   release:
     needs: setup  # Ensure that the release job waits for the setup job
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.PAT }}
+      NODE_AUTH_TOKEN: ${{ secrets.PAT }}
+      NPM_CONFIG_PROVENANCE: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -68,8 +70,11 @@ jobs:
 
   publish:
     needs: [setup, release]  # Ensure that the publish job waits for both setup and release jobs
-    if: github.event_name == 'release'
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.PAT }}
+      NODE_AUTH_TOKEN: ${{ secrets.PAT }}
+      NPM_CONFIG_PROVENANCE: true
     permissions:
       contents: read
       id-token: write  # needed for provenance data generation
