@@ -48,6 +48,15 @@ jobs:
           useLockFile: false
           install-command: npm install --legacy-peer-deps
 
+      # Upload the workspace (including node_modules) for later jobs
+      - name: Upload workspace
+        uses: actions/upload-artifact@v3
+        with:
+          name: workspace
+          path: |
+            ./
+            node_modules
+
   release:
     needs: setup  # Ensure that the release job waits for the setup job
     if: github.event_name == 'push'
