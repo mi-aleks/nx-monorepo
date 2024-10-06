@@ -6,12 +6,8 @@ on:
   push:
     branches:
       - main
+
 env:
-  # NX release needs to have a GH token in env.GITHUB_TOKEN
-  # As during this workflow we will create a new release
-  # that should trigger other workflow, we need to create custom TOKEN
-  # with proper permissions,
-  # more: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
   GITHUB_TOKEN: ${{ secrets.PAT }}
 
 jobs:
@@ -20,12 +16,8 @@ jobs:
     steps:
       - name: Checkout the main branch
         uses: actions/checkout@v4
-        # Only a single commit is fetched by default
-        # we need full repo history with tags, so we are setting fetch-depth: 0
         with:
           fetch-depth: 0
-          # We need to pass Personal Access Token in order
-          # to force triggering on-publish workflow
           token: ${{ secrets.PAT }}
 
       - name: Setup node
@@ -37,5 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      - name: Verify Nx Installation
+        run: npx nx --version
+
       - name: Run nx release
         run: npm run release
+
+      - name: Enable Debug Info (optional)
+        run: echo "NODE_DEBUG=fs,module,timers" >> $GITHUB_ENV

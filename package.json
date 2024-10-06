@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "release-dry": "npx nx release --dry-run",
-    "release": "nx release --skip-publish"
+    "release": "npx nx release --skip-publish"
   },
   "private": true,
   "dependencies": {
