@@ -1,5 +1,5 @@
 {
-  "name": "@mi-aleks/external",
+  "name": "external",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "modules/external/src",
   "projectType": "library",
