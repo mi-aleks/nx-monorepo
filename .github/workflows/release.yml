@@ -55,10 +55,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify Nx Installation
-        run: npx nx --version
+        run: nx --version
 
       - name: 🚀 Release
-        run: npx nx release --skip-publish
+        run: nx release --skip-publish
 
   publish:
     needs: setup  # Ensure that the publish job waits for the setup job
@@ -70,8 +70,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Print Environment Info
-        run: npx nx report
+        run: nx report
         shell: bash
 
       - name: Publish packages
-        run: npx nx release publish
+        run: nx release publish
