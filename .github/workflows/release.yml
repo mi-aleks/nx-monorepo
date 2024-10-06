@@ -35,7 +35,7 @@ jobs:
           cache: 'npm'
 
       - name: Install packages
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Sets the base and head SHAs for the nx affected commands in CI
         uses: nrwl/nx-set-shas@v4
