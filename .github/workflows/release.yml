@@ -39,10 +39,13 @@ jobs:
           key: ${{ runner.os }}-workspace-${{ hashFiles('package-lock.json') }}
 
       - name: 📥 Install deps
-        run: npm install --legacy-peer-deps
+        uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
+          install-command: npm install --legacy-peer-deps
 
       - name: Build project
-        run: npm run build
+        run: npx nx affected -t build
 
   release:
     needs: setup  # Depends on the setup job
