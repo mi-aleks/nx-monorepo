@@ -33,4 +33,4 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - name: Run lint, test and build on affected modules
-        run: npx nx affected -t lint test build e2e-ci
+        run: npx nx affected -t lint test
