@@ -70,8 +70,8 @@
     }
   },
   "release": {
-    "projects": ["external"],
     "projectsRelationship": "independent",
+    "projects": ["external"],
     "version": {
       "preVersionCommand": "npx nx run-many -t build",
       "conventionalCommits": true,
@@ -82,8 +82,8 @@
     },
     "changelog": {
       "projectChangelogs": {
-        "file": false,
-        "createRelease": "github"
+        "createRelease": "github",
+        "file": false
       }
     }
   },

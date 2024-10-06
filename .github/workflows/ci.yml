@@ -1,14 +1,13 @@
-# Name of your workflow
-name: Release
-
-# Rules that trigger the workflow
+name: CI
 on:
-  push:
+  pull_request:
     branches:
       - main
 
-env:
-  GITHUB_TOKEN: ${{ secrets.PAT }}
+# Needed for nx-set-shas when run on the main branch
+permissions:
+  actions: read
+  contents: read
 
 jobs:
   main:
@@ -18,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT }}
 
       - name: Setup node
         uses: actions/setup-node@v3
@@ -26,11 +24,13 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install Packages
         run: npm ci --legacy-peer-deps
 
       - name: Verify Nx Installation
         run: npx nx --version
 
-      - name: Run nx release
-        run: npx nx release --skip-publish
+      - uses: nrwl/nx-set-shas@v4
+
+      - name: Run lint, test and build on affected modules
+        run: npx nx affected -t lint test build e2e-ci
