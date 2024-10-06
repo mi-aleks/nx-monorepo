@@ -82,7 +82,6 @@
       "conventionalCommits": true,
       "generatorOptions": {
         "packageRoot": "dist/modules/{projectName}",
-        "currentVersionResolver": "registry",
         "fallbackCurrentVersionResolver": "disk"
       }
     },
